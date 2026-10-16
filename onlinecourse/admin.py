@@ -13,31 +13,34 @@ from .models import (
 
 
 class ChoiceInline(admin.TabularInline):
-    """Display choices inside the question admin page."""
     model = Choice
     extra = 2
 
 
 class QuestionInline(admin.StackedInline):
-    """Display questions inside the lesson admin page."""
     model = Question
     extra = 1
 
 
 class QuestionAdmin(admin.ModelAdmin):
-    """Configure the question administration page."""
     list_display = ("question_text", "lesson")
+    search_fields = ("question_text",)
     inlines = [ChoiceInline]
 
 
 class LessonAdmin(admin.ModelAdmin):
-    """Configure the lesson administration page."""
     list_display = ("title", "course")
+    search_fields = ("title",)
+    list_filter = ("course",)
     inlines = [QuestionInline]
 
 
-# Register models with Django Admin.
-admin.site.register(Course)
+class CourseAdmin(admin.ModelAdmin):
+    list_display = ("name",)
+    search_fields = ("name",)
+
+
+admin.site.register(Course, CourseAdmin)
 admin.site.register(Lesson, LessonAdmin)
 admin.site.register(Instructor)
 admin.site.register(Learner)
